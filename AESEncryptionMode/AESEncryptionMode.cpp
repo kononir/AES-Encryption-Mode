@@ -39,13 +39,13 @@ using namespace std;
 int main()
 {
 	Image initial("initial.bmp");
-	int size = initial.size();
+	unsigned int size = (unsigned int) initial.size();
 	int width = initial.width();
 	int height = initial.height();
 	
 	unsigned char* bytes = getImageBytes(initial);
 	unsigned char* key = generate();
-	/*
+	
 	unsigned char* encrypted_ECB_bytes = encryptECB(bytes, size, key);
 	Image encrypted_ECB(width, height, ONE_DIMENSIONAL, COLORS_NUMBER);
 	saveImage(encrypted_ECB, encrypted_ECB_bytes, "encrypted_ECB.bmp");
@@ -57,7 +57,7 @@ int main()
 	Image decrypted_ECB(width, height, ONE_DIMENSIONAL, COLORS_NUMBER);
 	saveImage(decrypted_ECB, decrypted_ECB_bytes, "decrypted_ECB.bmp");
 	delete(decrypted_ECB);
-	*/
+	
 	currResult = encryptCBC(bytes, size, key);
 	Image encrypted_CBC(width, height, ONE_DIMENSIONAL, COLORS_NUMBER);
 	saveImage(encrypted_CBC, currResult.bytes, "encrypted_CBC.bmp");
@@ -66,7 +66,6 @@ int main()
 	unsigned char* decrypted_CBC_bytes = decryptCBC(currResult, size, key);
 	Image decrypted_CBC(width, height, ONE_DIMENSIONAL, COLORS_NUMBER);
 	saveImage(decrypted_CBC, decrypted_CBC_bytes, "decrypted_CBC.bmp");
-	delete(decrypted_CBC);
 }
 
 unsigned char* getImageBytes(Image image) {
@@ -130,25 +129,25 @@ unsigned char* decryptECB(unsigned char* ciphertext, unsigned int size, unsigned
 	return aes.DecryptECB(ciphertext, size, key);
 }
 
-cbc_data encryptCBC(unsigned char* chyphertext, unsigned int size, unsigned char* key) {
+cbc_data encryptCBC(unsigned char* text, unsigned int size, unsigned char* key) {
 	AES aes(BLOCK_SIZE_BYTES);
 
 	unsigned char* iv = generate();
 	unsigned char* prev_C = iv;
 
 	unsigned int blocks_number = size / BLOCK_SIZE;
-	unsigned char** P = splitTextToBlocks(chyphertext, blocks_number);
+	unsigned char** P = splitTextToBlocks(text, blocks_number);
 
 	unsigned char* ciphertext = new unsigned char[size];
 
-	unsigned int outLen = 0;
-
 	for (unsigned int block = 0; block < blocks_number; block++) {
 		unsigned char* C = new unsigned char[BLOCK_SIZE];
+
 		for (unsigned int byte = 0; byte < BLOCK_SIZE; byte++) {
 			C[byte] = P[block][byte] ^ prev_C[byte];
 		}
 
+		unsigned int outLen = 0;
 		C = aes.EncryptECB(C, BLOCK_SIZE, key, outLen);
 
 		memcpy(ciphertext + block * BLOCK_SIZE, C, BLOCK_SIZE);

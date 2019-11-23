@@ -490,7 +490,7 @@ void AES::XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsig
 
 void AES::printHexArray(unsigned char a[], unsigned int n)
 {
-	for (int i = 0; i < n; i++) {
+	for (unsigned int i = 0; i < n; i++) {
 		printf("%02x ", a[i]);
 	}
 }
