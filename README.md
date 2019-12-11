@@ -8,4 +8,6 @@
 
 #### Output - 4 files (encrypted/decrypted with ECB and CBC images).
 
-#### Works only with 256x256 (aes block size) .bmp images (plain or converted from .jpg)!!!
+#### Works only with 256x256 (aes block size - 128 bit) .bmp images (plain or converted from .jpg)!!!
+
+[Original library](https://github.com/SergeyBel/AES)
